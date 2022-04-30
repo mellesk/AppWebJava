@@ -24,7 +24,7 @@ pipeline {
  
  stage('Upload To DockerHub') {
  environment {
- PASS = credentials('docker')
+ PASS = credentials('docker_pass')
  }
  steps {
  echo "${PASS}"
