@@ -9,7 +9,7 @@ pipeline {
  } 
  stage('Build'){
  tools{
- maven 'MAVEN3'
+ maven 'MAVEN'
  }
  steps{
  sh 'mvn clean install'
