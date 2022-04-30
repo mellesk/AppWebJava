@@ -1,32 +1,45 @@
-node{
-    
-    stage('Chargemet depuis Github'){
-        git branch: 'main', url: 'https://github.com/medsalahmeddeb/AppWebJava'
-    }
-    
-    stage('Construction  du projet par MAVEN'){
-        
-        echo "Début de la construction"
-        def mvn_path = tool name: 'MAVEN3', type: 'maven'
-        sh "${mvn_path}/bin/mvn clean install package"
-    } 
-    /*
-    stage('Deploimement sur tomacat container'){
-        sshagent(['root-jenkins']) {
-           sh "mv target/AppWebJava*.war target/myweb.war"
-            sh "scp -o StrictHostKeyChecking=no target/myweb.war root@192.168.118.154:/opt/tomcat8/webapps/"
-            sh "ssh root@192.168.118.154 /opt/tomcat8/bin/shutdown.sh"
-            sh "ssh root@192.168.118.154 /opt/tomcat8/bin/startup.sh"
-        }
-    }*/
-    stage('Deploimement sur tomacat container'){
-        deploy adapters: [tomcat8(credentialsId: 'deployer_user', path: '', 
-        url: 'http://192.168.118.154:8088/')], 
-        contextPath: null, 
-        war: '**/*.war'
-    }
-    
-    stage ('Notification'){
-        mail bcc: '', body: 'Build app', cc: '', from: '', replyTo: '', subject: 'Build app', to: 'medsalah.meddeb@gmail.com'
-    }
+pipeline {
+ agent any
+ stages {
+ stage('Checkout') {
+ steps {
+ git branch: 'main', 
+ url: 'https://github.com/mellesk/AppWebJava'
+ }
+ } 
+ stage('Build'){
+ tools{
+ maven 'MAVEN3'
+ }
+ steps{
+ sh 'mvn clean install'
+ }
+ }
+ 
+ stage('Build Docker Image') {
+ steps {
+ sh "docker build -t 132020/appwebjava:1.0.0 
+/var/lib/jenkins/workspace/${JOB_NAME}"
+ }
+ }
+ 
+ stage('Upload To DockerHub') {
+ environment {
+ PASS = credentials('pass-dockerhub')
+ }
+ steps {
+ echo "${PASS}"
+ sh "docker login -u '132020' -p \'${docker}\'"
+ sh "docker push 132020/appwebjava:1.0.0"
+ }
+ }
+ 
+ stage('Deploy app container') {
+ steps {
+ sh "docker rm -f appwebjava"
+ sh "docker run -d -p 80:8585 --name appwebjava 
+132020/appwebjava:1.0.0"
+ }
+ }
+ }
 }
