@@ -25,11 +25,11 @@ pipeline {
  
  stage('Upload To DockerHub') {
  environment {
- PASS = credentials('pass-dockerhub')
+ PASS = credentials('docker')
  }
  steps {
  echo "${PASS}"
- sh "docker login -u '132020' -p \'${docker}\'"
+ sh "docker login -u '132020' -p \'${PASS}\'"
  sh "docker push 132020/appwebjava:1.0.0"
  }
  }
