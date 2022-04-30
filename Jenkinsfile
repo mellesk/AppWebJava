@@ -36,7 +36,7 @@ pipeline {
  stage('Deploy app container') {
  steps {
  sh "docker rm -f appwebjava"
- sh "docker run -d -p 8080:8585 --name appwebjava 132020/appwebjava:1.0.0"
+ sh "docker run -d -p 8585:8080 --name appwebjava 132020/appwebjava:1.0.0"
  }
  }
  }
