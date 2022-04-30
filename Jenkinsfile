@@ -18,7 +18,7 @@ pipeline {
  
  stage('Build Docker Image') {
  steps {
- sh "docker build -t 132020/appwebjava:1.0.0 /var/lib/jenkins/workspace/${JOB_NAME}"
+ sh "sudo docker build -t 132020/appwebjava:1.0.0 /var/lib/jenkins/workspace/${JOB_NAME}"
  }
  }
  
@@ -28,15 +28,15 @@ pipeline {
  }
  steps {
  echo "${PASS}"
- sh "docker login -u '132020' -p \'${PASS}\'"
- sh "docker push 132020/appwebjava:1.0.0"
+ sh "sudo docker login -u '132020' -p \'${PASS}\'"
+ sh "sudo docker push 132020/appwebjava:1.0.0"
  }
  }
  
  stage('Deploy app container') {
  steps {
- sh "docker rm -f appwebjava"
- sh "docker run -d -p 80:8585 --name appwebjava 132020/appwebjava:1.0.0"
+ sh "sudo docker rm -f appwebjava"
+ sh "sudo docker run -d -p 80:8585 --name appwebjava 132020/appwebjava:1.0.0"
  }
  }
  }
