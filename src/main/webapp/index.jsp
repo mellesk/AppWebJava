@@ -10,7 +10,7 @@
 <!-- partial:index.partial.html -->
 <div class="login-form">
   <form>
-    <h1>PROJET DEVOPS - Deploiement sur docker  (Manel & Nassima) | Page de Login - DEMO 2</h1>
+    <h1>PROJET DEVOPS - Deploiement sur docker  (Manel & Nassima) | Page de Login - DEMO 3</h1>
     <div class="content">
       <div class="input-field">
         <input type="email" placeholder="Email" autocomplete="nope">
